@@ -5,14 +5,15 @@ const ProjectSchema = new mongoose.Schema({
   description: String,
   progress: {
       type: String,
-      enum:["Start","In Progress","Finished"]
+      enum:["Start","Progress","Finished"],
+      default:"Start"
     },
-  team: {
-    type: String,
-  },
-  deadline:{type: Date}
-});
+  team: { type : Array , "default" : [] }
+  ,
+  deadline:{type: Date},
+  createdBy: String,
+},{timestamps:true});
 
-const Project = mongoose.model("Project", UserSchema);
+const Project = mongoose.model("Project", ProjectSchema);
 
 module.exports = Project;

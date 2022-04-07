@@ -26,16 +26,15 @@ UserSchema.methods.validPassword = function(password) {
      return this.password === password;
   };
 
-UserSchema.methods.generateJWT = function() {
+UserSchema.methods.generateJWT = function(_id, email) {
       var today = new Date();
       var exp = new Date(today);
       exp.setDate(today.getDate() + 60);
-      this.token = jwt.sign({
-        id: this._id,
-        username: this.username,
+      return jwt.sign({
+        id: id,
+        email: email,
         exp: parseInt(exp.getTime() / 1000),
       }, secret)
-      return this.token;
     };
 
 

@@ -23,7 +23,11 @@ try{
 }
 
 
-app.use('/api/v1', API)
+app.use('/api/', API)
+
+API.use('/user/',require('./routes/user'))
+API.use('/project/',require('./routes/project'))
+API.use('/issue/',require('./routes/issue'))
 
 app.listen(port, () => {
   console.log(`Development Port:${port}`)

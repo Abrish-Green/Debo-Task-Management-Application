@@ -5,11 +5,12 @@ const IssueSchema = new mongoose.Schema({
   description: String,
   progress: {
       type: String,
-      enum:["Start","In Progress","Done"]
+      enum:["Start","Progress","Done"],
+      default: "Start"
     },
   task_for:  { type : Array , "default" : [] },
   deadline:{type: Date}
-});
+},{timestamps:true});
 
 const Issue = mongoose.model("Issue", IssueSchema);
 
