@@ -67,11 +67,11 @@ router.get('/get',async (req,res)=>{
 })
 
 //TODO : EDIT a Issue // Assign Task to Member
-router.patch('/assign',async (req,res)=>{
+router.patch('/member/assign',async (req,res)=>{
     const error = []
     const { id, task_for } = req.body
     if(!id) error.push({"id":"Id can't be null"})
-    if(!task_for) error.push({"task_for":"No task is assigned"})
+    if(!task_for) error.push({"task_for":"Member is not assigned"})
      
     if(error.length == 0){
     const issue = await Issue.findOne({_id:req.body.id}).exec();
@@ -106,7 +106,46 @@ router.patch('/assign',async (req,res)=>{
     })
 
 })
+//TODO : EDIT a Issue // Remove Member from Task
+router.patch('/member/remove',async (req,res)=>{
+    const error = []
+    const { id, task_for } = req.body
+    if(!id) error.push({"id":"Id can't be null"})
+    if(!task_for) error.push({"task_for":"Member is not assigned"})
+     
+    if(error.length == 0){
+    const issue = await Issue.findOne({_id:req.body.id}).exec();
+    if(issue.length==0){
+            return res.status(201).json({
+                "status":"fail",
+                "message":"No Issue"
+            })
+        }else{ 
 
+            const emailNotExists = issue.task_for.indexOf(task_for.email) == -1
+            if(!emailNotExists){
+                issue.task_for.pop(task_for.email);
+                issue.save();
+                return res.status(201).json({
+                    "status":"ok",
+                    "message":"team member removed successfully",
+                    "team":issue.task_for
+                })
+            }else{
+                return res.status(201).json({
+                    "status":"fail",
+                    "message":"email dont't exists",
+                })
+            }
+           
+        }
+    }
+    return res.status(200).json({
+        "status":"fail",
+        "error":error
+    })
+
+})
 //TODO : DELETE a Issue
 router.delete('/',async(req,res)=>{
     const issue = await Issue.find({_id:req.body.id}).exec()
@@ -148,6 +187,42 @@ router.get('/user/',async(req,res)=>{
         "issues": issues
     })
 })
+
+//TODO : EDIT a Issue // UPDATE Issue STATUS
+router.patch('/progress/update',async (req,res)=>{
+    const error = []
+    var { id, progress } = req.body
+    if(!id) error.push({"id":"issue Id can't be null"})
+     
+    if(error.length == 0){
+    var issue = await Issue.findOne({_id:req.body.id}).exec();
+    if(issue.length==0){
+            return res.status(201).json({
+                "status":"fail",
+                "message":"No Issue yet"
+            })
+        }else{ 
+                progress = progress.toLowerCase()
+                var Progress = ""
+                if(progress == "progress") {Progress = "Progress"}
+                if(progress == "finished") {Progress = "Finished"}
+                if(progress != "progress" && progress != "finished") {Progress = "Start"}
+                issue.progress = Progress
+                issue.save()
+                return res.status(200).json({
+                    "status":"ok",
+                    "message":"project status updated successfully",
+                    "team":issue
+                })
+        }
+    }
+    return res.status(200).json({
+        "status":"fail",
+        "error":error
+    })
+
+})
+
 
 
 module.exports = router

@@ -5,7 +5,7 @@ const IssueSchema = new mongoose.Schema({
   description: String,
   progress: {
       type: String,
-      enum:["Start","Progress","Done"],
+      enum:["Start","Progress","Finished"],
       default: "Start"
     },
   task_for:  { type : Array , "default" : [] },
