@@ -1,2 +1,4 @@
 .env
 node_modules
+.vscode
+./interface/node_modules
