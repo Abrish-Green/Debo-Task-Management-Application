@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 
 // ADD ACCOUNT
 router.post('/sign_up', async(req,res)=>{
-    const { username , email ,password } = req.body
+    const { username , email ,password, isAdmin } = req.body
     
     let error = []
     if(!password) 
@@ -19,16 +19,17 @@ router.post('/sign_up', async(req,res)=>{
         error.push({email: "email can't be empty"})
     
     if(error.length > 0){
-        return res.status(202).json({
+        return res.status(200).json({
             "error":error
         })
     }
 
+    console.log(req.body)
     const newUser = new User(req.body)
     newUser.setPassword(password)
     await newUser.save(function(err,result){
         if (err){
-            return res.status(202).json(err);
+            return res.status(200).json(err);
         }
         else{
             return res.status(200).json({
@@ -47,7 +48,7 @@ router.post('/login',async(req,res)=>{
 
     const { email, password } = req.body
     if((!email || validator.isEmail(email) == false) || (!password))  {
-        return res.status(202).json({"error": "Incorrect input"})
+        return res.status(200).json({"error": "Incorrect input"})
     }
     try{
          let user = await User.findOne({ email: email}).exec();    
@@ -73,22 +74,24 @@ router.post('/login',async(req,res)=>{
             return res.status(200).json({
                 "status":"ok",
                 "jwt_token": jwt_token,
+                "Id" :user._id,
+                "isAdmin": user.isAdmin,
                 "message":"user logged in successfully"
                 
             })
         }
-        return res.status(402).json({
+        return res.status(200).json({
             "status":"failed",
             "error":"Incorrect Credential",
         }) 
     }
     
-    return res.status(402).json({
+    return res.status(200).json({
         "status":"failed",
         "error":"User Not Found"
     }) 
 }catch(err){
-    return res.status(402).json({
+    return res.status(200).json({
         "status":"failed",
         "error":err
     }) 

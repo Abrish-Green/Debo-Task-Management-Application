@@ -4,7 +4,9 @@
   "description": "it is a task management application to differnet kind of teams",
   "main": "index.js",
   "scripts": {
+    "interface": "npm start --prefix ../interface",
     "dev": "nodemon index.js",
+    "pro": "concurrently \"npm run dev\" \"npm run interface\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +20,9 @@
   },
   "homepage": "https://github.com/Abrish-Green/Debo-Task-Management-Application#readme",
   "dependencies": {
+    "concurrently": "^7.1.0",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.0",
